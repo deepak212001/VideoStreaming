@@ -5,6 +5,12 @@
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .video-player {
+    border-radius: 0;
+  }
+}
+
 .video-player-container {
   position: relative;
   aspect-ratio: 16 / 9;

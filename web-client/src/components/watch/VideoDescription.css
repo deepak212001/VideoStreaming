@@ -2,7 +2,7 @@
   background: #272727;
   border-radius: 12px;
   padding: 16px;
-  margin-top: 16px;
+  margin-top: 8px;
 }
 
 .video-description-meta {
@@ -48,4 +48,23 @@
 
 .video-description-more:hover {
   color: #f1f1f1;
+}
+
+/* Hide meta on mobile - shown in VideoMetadata */
+@media (max-width: 768px) {
+  .video-description-meta-desktop {
+    display: none;
+  }
+
+  .video-description {
+    margin-top: 0;
+    padding: 12px 0 0;
+    background: none;
+    border-radius: 0;
+  }
+
+  .video-description-text {
+    font-size: 13px;
+    color: #aaa;
+  }
 }

@@ -1,13 +1,35 @@
-import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import "./Comments.css";
 
 function Comments({ comments = [] }) {
   const [sortBy, setSortBy] = useState("Top");
+  const [expanded, setExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const commentCount = comments?.length ?? 0;
   const user = useSelector((state) => state.auth.user);
-  return (
-    <div className="comments">
+  const firstComment = comments?.[0];
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mq.matches);
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile && expanded) {
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = ""; };
+    }
+  }, [isMobile, expanded]);
+
+  const showPreview = isMobile && !expanded;
+  const showSheet = isMobile && expanded;
+
+  const commentsContent = (
+    <>
       <div className="comments-header">
         <h2 className="comments-count">{commentCount} Comments</h2>
         <button className="comments-sort">
@@ -77,6 +99,67 @@ function Comments({ comments = [] }) {
           </div>
         ))}
       </div>
+    </>
+  );
+
+  return (
+    <div className={`comments ${showPreview ? "comments-preview-mode" : ""}`}>
+      {showPreview ? (
+        <div
+          className="comments-preview-box"
+          onClick={() => setExpanded(true)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === "Enter" && setExpanded(true)}
+          aria-label="View all comments"
+        >
+          <div className="comments-preview-header">
+            <h2 className="comments-count">{commentCount} Comments</h2>
+          </div>
+          {firstComment ? (
+            <div className="comments-preview-item">
+              <img
+                className="comment-avatar"
+                src={firstComment.owner?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=default"}
+                alt=""
+              />
+              <p className="comments-preview-text">{firstComment.content}</p>
+            </div>
+          ) : (
+            <div className="comments-preview-item comments-preview-empty">
+              <p className="comments-preview-text">No comments yet</p>
+            </div>
+          )}
+        </div>
+      ) : showSheet ? (
+        <div className="comments-sheet-overlay">
+          <div className="comments-sheet-backdrop" onClick={() => setExpanded(false)} aria-hidden="true" />
+          <div className="comments-sheet">
+            <div className="comments-sheet-header">
+              <div className="comments-sheet-drag" />
+              <div className="comments-sheet-title-row">
+                <h2 className="comments-sheet-count">
+                  Comments <span className="comments-sheet-number">{commentCount}</span>
+                </h2>
+                <button
+                  className="comments-sheet-close"
+                  onClick={() => setExpanded(false)}
+                  aria-label="Close comments"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div className="comments-sheet-body">
+              {commentsContent}
+            </div>
+          </div>
+        </div>
+      ) : (
+        commentsContent
+      )}
     </div>
   );
 }

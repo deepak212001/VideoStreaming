@@ -30,3 +30,41 @@
     max-height: none;
   }
 }
+
+/* Phone / mobile view - YouTube mobile style */
+@media (max-width: 768px) {
+  .watch-main {
+    padding: 0 !important;
+    margin-top: 56px;
+  }
+
+  .watch-layout {
+    flex-direction: column;
+    padding: 0;
+    gap: 0;
+    max-width: 100%;
+  }
+
+  .watch-video-wrapper {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .watch-video-info {
+    padding: 12px 16px 0;
+  }
+
+  .watch-video-section {
+    padding: 0 0 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .watch-sidebar {
+    width: 100%;
+    padding: 16px 12px 24px;
+  }
+
+  .watch-sidebar .recommendation-title {
+    display: none;
+  }
+}

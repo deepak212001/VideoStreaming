@@ -1,5 +1,5 @@
 .video-metadata {
-  padding-top: 16px;
+  padding-top: 12px;
 }
 
 .video-metadata-title {
@@ -7,7 +7,57 @@
   font-weight: 500;
   color: #f1f1f1;
   line-height: 1.4;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
+}
+
+.video-metadata-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 14px;
+  color: #aaa;
+  margin-bottom: 8px;
+}
+
+.video-metadata-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.video-metadata-views {
+  color: #aaa;
+}
+
+.video-metadata-sep {
+  color: #717171;
+}
+
+.video-metadata-date {
+  color: #aaa;
+}
+
+.video-metadata-more-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Hide "more" and meta (views · date) on desktop - only show on mobile */
+@media (min-width: 769px) {
+  .video-metadata-more-link,
+  .video-metadata-meta {
+    display: none;
+  }
+}
+
+.video-metadata-more-link:hover {
+  color: #f1f1f1;
 }
 
 .video-metadata-channel-row {
@@ -15,7 +65,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
 }
 
 .video-metadata-channel-info {
@@ -74,6 +124,13 @@
   flex-wrap: wrap;
 }
 
+.video-metadata-actions-desktop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .video-metadata-like-group {
   display: flex;
   align-items: center;
@@ -115,4 +172,53 @@
 
 .video-metadata-more {
   padding: 10px;
+}
+
+/* Mobile - YouTube phone view */
+@media (max-width: 768px) {
+  .video-metadata {
+    padding-top: 12px;
+  }
+
+  .video-metadata-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .video-metadata-meta {
+    margin-bottom: 12px;
+    font-size: 13px;
+  }
+
+  .video-metadata-channel-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .video-metadata-channel-info {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .video-metadata-actions-desktop {
+    display: none;
+  }
+
+  .video-metadata-actions {
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .video-metadata-actions::-webkit-scrollbar {
+    display: none;
+  }
+
+  .video-metadata-action-btn {
+    flex-shrink: 0;
+  }
 }

@@ -13,3 +13,18 @@
   display: flex;
   flex-direction: column;
 }
+
+@media (max-width: 768px) {
+  .recommendation-sidebar {
+    padding: 0;
+  }
+
+  .compact-video-card {
+    padding: 12px 0;
+  }
+
+  .compact-video-card-thumbnail {
+    width: 40%;
+    max-width: 160px;
+  }
+}

@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import './VideoDescription.css'
 
-function VideoDescription({ video }) {
-  const [expanded, setExpanded] = useState(false)
+function VideoDescription({ video, expanded: expandedProp, onExpand }) {
+  const [expandedLocal, setExpandedLocal] = useState(false)
+  const expanded = expandedProp ?? expandedLocal
+  const setExpanded = onExpand ?? (() => setExpandedLocal(true))
   const fullDescription = video?.description || 'No description available.'
   const hashtags = ['#TMKOCMemes', '#TaarakMehta', '#LIVComedy', '#Jethalal']
   const shouldTruncate = fullDescription.length > 150
@@ -11,10 +13,10 @@ function VideoDescription({ video }) {
     : fullDescription.slice(0, 150) + '...'
 
   return (
-    <div className="video-description">
-      <div className="video-description-meta">
+    <div id="video-description" className="video-description">
+      <div className="video-description-meta video-description-meta-desktop">
         <span className="video-description-views">{video?.views}</span>
-        <span className="video-description-sep"> • </span>
+        <span className="video-description-sep"> · </span>
         <span className="video-description-date">{video?.uploadDate}</span>
         {hashtags.map((tag) => (
           <a key={tag} href="#" className="video-description-tag">
@@ -25,7 +27,7 @@ function VideoDescription({ video }) {
       <p className="video-description-text">
         {displayText}
         {shouldTruncate && !expanded && (
-          <button className="video-description-more" onClick={() => setExpanded(true)}>
+          <button className="video-description-more" onClick={() => setExpanded()}>
             ...more
           </button>
         )}

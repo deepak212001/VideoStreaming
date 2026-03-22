@@ -15,6 +15,12 @@ function WatchPage({ sidebarOpen, onCloseSidebar }) {
   const [video, setVideo] = useState(null);
   const [comments, setComments] = useState(null);
   const [likes, setLikes] = useState(null);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+
+  const handleExpandDescription = () => {
+    setDescriptionExpanded(true);
+    setTimeout(() => document.getElementById('video-description')?.scrollIntoView({ behavior: 'smooth' }), 50);
+  };
 
   useEffect(() => {
     if (!videoId) {
@@ -53,10 +59,14 @@ function WatchPage({ sidebarOpen, onCloseSidebar }) {
     <main className="main-content watch-main watch-no-sidebar">
         <div className="watch-layout">
           <section className="watch-video-section">
-            <VideoPlayer video={video} />
-            <VideoMetadata video={video} />
-            <VideoDescription video={video} />
-            <Comments comments={comments} />
+            <div className="watch-video-wrapper">
+              <VideoPlayer video={video} />
+            </div>
+            <div className="watch-video-info">
+              <VideoMetadata video={video} likes={likes} onExpandDescription={handleExpandDescription} />
+              <VideoDescription video={video} expanded={descriptionExpanded} onExpand={() => setDescriptionExpanded(true)} />
+              <Comments comments={comments} />
+            </div>
           </section>
           <aside className="watch-sidebar">
             <RecommendationSidebar currentVideoId={video?._id || video?.id} />
