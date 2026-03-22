@@ -1,0 +1,51 @@
+.video-description {
+  background: #272727;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.video-description-meta {
+  font-size: 14px;
+  font-weight: 500;
+  color: #f1f1f1;
+  margin-bottom: 8px;
+}
+
+.video-description-sep {
+  color: #aaa;
+}
+
+.video-description-date {
+  color: #aaa;
+}
+
+.video-description-tag {
+  color: #3ea6ff;
+  margin-left: 4px;
+  text-decoration: none;
+}
+
+.video-description-tag:hover {
+  text-decoration: underline;
+}
+
+.video-description-text {
+  font-size: 14px;
+  color: #f1f1f1;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.video-description-more {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  padding: 0;
+  font-size: 14px;
+}
+
+.video-description-more:hover {
+  color: #f1f1f1;
+}

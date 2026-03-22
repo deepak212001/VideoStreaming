@@ -1,0 +1,32 @@
+export const COMMENTS_DATA = [
+  {
+    id: 1,
+    author: 'Arjit_011',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=c1',
+    text: '8:37 pe wala scene best tha 😂😂',
+    time: '6 months ago',
+    likes: 245,
+    replies: 3,
+    edited: false,
+  },
+  {
+    id: 2,
+    author: 'ComedyFan',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=c2',
+    text: 'Jethalal aur Iyer ki jodi 🔥',
+    time: '5 months ago',
+    likes: 189,
+    replies: 0,
+    edited: true,
+  },
+  {
+    id: 3,
+    author: 'TMKOC_Lover',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=c3',
+    text: 'Bahut funny episode tha! Subscribe karo LIV Comedy ko.',
+    time: '4 months ago',
+    likes: 92,
+    replies: 12,
+    edited: false,
+  },
+]

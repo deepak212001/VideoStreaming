@@ -1,0 +1,15 @@
+.recommendation-sidebar {
+  padding-left: 0;
+}
+
+.recommendation-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #f1f1f1;
+  margin-bottom: 8px;
+}
+
+.recommendation-list {
+  display: flex;
+  flex-direction: column;
+}

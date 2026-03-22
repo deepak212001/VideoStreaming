@@ -1,0 +1,156 @@
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 98;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.sidebar-overlay-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sidebar {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  bottom: 0;
+  width: 240px;
+  background: #0f0f0f;
+  z-index: 99;
+  padding: 12px 0;
+  overflow-y: auto;
+  transition: width 0.2s, transform 0.2s;
+}
+
+.sidebar-collapsed {
+  width: 72px;
+  padding: 12px 0;
+}
+
+.sidebar-collapsed .sidebar-label {
+  display: none;
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 24px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-user-collapsed {
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.sidebar-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.sidebar-user-name {
+  font-size: 18px;
+  font-weight: 500;
+  color: #f1f1f1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  padding: 10px 24px;
+  color: #f1f1f1;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  border-radius: 0;
+  transition: background 0.2s;
+}
+
+.sidebar-collapsed .sidebar-item {
+  padding: 10px 0;
+  justify-content: center;
+}
+
+.sidebar-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-item-active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-item-active .sidebar-icon {
+  color: #f1f1f1;
+}
+
+.sidebar-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #f1f1f1;
+}
+
+.sidebar-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.sidebar-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mobile: sidebar as drawer overlay */
+@media (max-width: 1280px) {
+  .sidebar {
+    transform: translateX(-100%);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+    width: 240px;
+  }
+
+  .sidebar.sidebar-open.sidebar-collapsed {
+    width: 240px;
+  }
+}
+
+/* Watch page: sidebar always as overlay on all screen sizes */
+.watch-route .sidebar {
+  transform: translateX(-100%);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.watch-route .sidebar.sidebar-open {
+  transform: translateX(0);
+  width: 240px;
+}

@@ -1,0 +1,266 @@
+.settings-main {
+  padding: 24px;
+  padding-top: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: calc(100vh - 80px);
+  overflow: hidden;
+}
+
+.settings-card {
+  max-width: 640px;
+  width: 100%;
+  padding: 20px;
+  margin-top: 24px;
+  background: #181818;
+  border: 1px solid #303030;
+  border-radius: 12px;
+}
+
+.settings-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #f1f1f1;
+  margin-bottom: 16px;
+}
+
+.settings-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #303030;
+}
+
+.settings-avatar-wrap {
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.settings-avatar-wrap:hover .settings-avatar-hover {
+  opacity: 1;
+}
+
+.settings-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.settings-avatar-hover {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.settings-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f1f1f1;
+  margin-bottom: 4px;
+}
+
+.settings-email {
+  font-size: 14px;
+  color: #aaa;
+}
+
+.settings-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 16px;
+}
+
+.settings-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #272727;
+}
+
+.settings-detail-row:last-child {
+  border-bottom: none;
+}
+
+.settings-detail-label {
+  font-size: 14px;
+  color: #717171;
+}
+
+.settings-detail-value {
+  font-size: 14px;
+  color: #f1f1f1;
+  font-weight: 500;
+}
+
+.settings-edit-btn {
+  display: block;
+  padding: 10px 20px;
+  margin-bottom: 16px;
+  background: transparent;
+  border: 1px solid #3ea6ff;
+  border-radius: 8px;
+  color: #3ea6ff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.settings-edit-btn:hover {
+  background: rgba(62, 166, 255, 0.15);
+}
+
+.settings-placeholder {
+  font-size: 14px;
+  color: #717171;
+}
+
+/* Modal */
+.settings-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.settings-modal {
+  background: #181818;
+  border: 1px solid #303030;
+  border-radius: 12px;
+  padding: 24px;
+  min-width: 320px;
+}
+
+.settings-modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f1f1f1;
+  margin-bottom: 16px;
+}
+
+.settings-modal-error {
+  font-size: 13px;
+  color: #f44336;
+  margin-bottom: 12px;
+}
+
+.settings-modal-input {
+  display: none;
+}
+
+.settings-modal-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: #3ea6ff;
+  color: #0f0f0f;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.settings-modal-btn:hover:not(:disabled) {
+  background: #65b8ff;
+}
+
+.settings-modal-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.settings-modal-close {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  color: #aaa;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+}
+
+.settings-modal-close:hover {
+  color: #f1f1f1;
+}
+
+/* Edit modal */
+.settings-edit-modal {
+  min-width: 380px;
+}
+
+.settings-edit-field {
+  margin-bottom: 16px;
+}
+
+.settings-edit-field label {
+  display: block;
+  font-size: 13px;
+  color: #aaa;
+  margin-bottom: 6px;
+}
+
+.settings-edit-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: #121212;
+  border: 1px solid #303030;
+  border-radius: 8px;
+  color: #f1f1f1;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.settings-edit-input:focus {
+  outline: none;
+  border-color: #3ea6ff;
+}
+
+.settings-edit-input.auth-input-error {
+  border-color: #c00;
+}
+
+.settings-edit-input.auth-input-success {
+  border-color: #0f9d58;
+}
+
+.settings-username-msg {
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.settings-username-available {
+  color: #0f9d58;
+}
+
+.settings-username-taken {
+  color: #f44336;
+}
+
+.settings-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+}

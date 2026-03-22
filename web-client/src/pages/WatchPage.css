@@ -1,0 +1,32 @@
+.watch-main {
+  padding: 0 !important;
+}
+
+.watch-layout {
+  display: flex;
+  gap: 24px;
+  padding: 24px;
+  width: 100%;
+}
+
+.watch-video-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.watch-sidebar {
+  flex-shrink: 0;
+  width: 402px;
+}
+
+@media (max-width: 1280px) {
+  .watch-layout {
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .watch-sidebar {
+    width: 100%;
+    max-height: none;
+  }
+}

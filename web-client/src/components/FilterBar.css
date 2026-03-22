@@ -1,0 +1,47 @@
+.filter-bar-container {
+  position: sticky;
+  top: 56px;
+  z-index: 50;
+  background: #0f0f0f;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  width: 100%;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 0 24px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.filter-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-chip {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  background: #272727;
+  color: #f1f1f1;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.filter-chip:hover {
+  background: #3f3f3f;
+}
+
+.filter-chip-active {
+  background: #f1f1f1;
+  color: #0f0f0f;
+}
+
+.filter-chip-active:hover {
+  background: #e5e5e5;
+}
