@@ -317,8 +317,12 @@ function VideoPlayer({ video }) {
             playsInline
             className="video-player-video"
           />
+        ) : video?.thumbnail ? (
+          <img src={video.thumbnail} alt={video?.title || ""} className="video-player-poster" />
         ) : (
-          <img src={video?.thumbnail} alt={video?.title} className="video-player-poster" />
+          <div className="video-player-placeholder" role="status" aria-label="Loading video">
+            {!video ? "Loading…" : "Video unavailable"}
+          </div>
         )}
         {videoUrl && !isPlaying && (
           <button className="video-player-play-overlay" aria-label="Play">

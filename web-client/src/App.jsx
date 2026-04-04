@@ -4,6 +4,8 @@ import Navbar from './components/Navbar'
 import HomePage from './pages/HomePage'
 import WatchPage from './pages/WatchPage'
 import HistoryPage from './pages/HistoryPage'
+import SubscriptionsPage from './pages/SubscriptionsPage'
+import ChannelPage from './pages/ChannelPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import SettingsPage from './pages/SettingsPage'
@@ -51,6 +53,28 @@ function AppContent() {
             path="/history"
             element={
               <HistoryPage
+                sidebarCollapsed={sidebarCollapsed}
+                sidebarOpen={sidebarOpen}
+                onCloseSidebar={closeSidebar}
+                isMobile={isMobile}
+              />
+            }
+          />
+          <Route
+            path="/subscriptions"
+            element={
+              <SubscriptionsPage
+                sidebarCollapsed={sidebarCollapsed}
+                sidebarOpen={sidebarOpen}
+                onCloseSidebar={closeSidebar}
+                isMobile={isMobile}
+              />
+            }
+          />
+          <Route
+            path="/c/:channelId"
+            element={
+              <ChannelPage
                 sidebarCollapsed={sidebarCollapsed}
                 sidebarOpen={sidebarOpen}
                 onCloseSidebar={closeSidebar}

@@ -107,8 +107,51 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
         );
 })
 
+const getMySubscribedChannels = asyncHandler(async (req, res) => {
+  const subs = await Subscription.find({ subscriber: req.user._id })
+    .populate("channel", "fullName avatar username")
+    .sort({ _id: -1 })
+    .lean();
+
+  const channels = subs
+    .map((s) => {
+      const ch = s.channel;
+      if (!ch || !ch._id) return null;
+      return {
+        _id: ch._id,
+        fullName: ch.fullName,
+        avatar: ch.avatar,
+        username: ch.username,
+      };
+    })
+    .filter(Boolean);
+
+  return res.status(200).json(
+    new ApiResponse(200, { channels }, "Subscribed channels fetched successfully"),
+  );
+});
+
+const checkSubscripted = asyncHandler(async (req, res) => {
+    const { channelId } = req.params
+    if (!isValidObjectId(channelId)) {
+        throw new ApiError(404, "channel does not exist");
+    }
+    const isSubscribed = await Subscription.exists({
+        subscriber: req.user._id,
+        channel: channelId
+    })
+    console.log("isSubscribed", isSubscribed);
+    if(isSubscribed) {
+        return res.status(200).json(new ApiResponse(200, true, "Subscribed"))
+    } else {
+        return res.status(200).json(new ApiResponse(200, false, "Not Subscribed"))
+    }
+})
+
 export {
     toggleSubscription,
     getUserChannelSubscribers,
-    getSubscribedChannels
+    getSubscribedChannels,
+    getMySubscribedChannels,
+    checkSubscripted,
 }

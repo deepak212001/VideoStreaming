@@ -1,38 +1,40 @@
-import { useState, useRef, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { logout } from '../store/authSlice'
-import { api } from '../api/api'
-import './Navbar.css'
+import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../store/authSlice";
+import { api } from "../api/api";
+import UploadVideoModal from "./UploadVideoModal";
+import "./Navbar.css";
 
 function Navbar({ onMenuClick }) {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-  const dropdownRef = useRef(null)
-  const user = useSelector((state) => state.auth.user)
-  const dispatch = useDispatch()
+  const [searchQuery, setSearchQuery] = useState("");
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false)
+        setDropdownOpen(false);
       }
-    }
+    };
     if (dropdownOpen) {
-      document.addEventListener('click', handleClickOutside)
+      document.addEventListener("click", handleClickOutside);
     }
-    return () => document.removeEventListener('click', handleClickOutside)
-  }, [dropdownOpen])
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [dropdownOpen]);
 
   const handleLogout = async () => {
     try {
-      await api.post('/users/logout')
+      await api.post("/users/logout");
     } catch {
       // ignore - clear state anyway
     }
-    dispatch(logout())
-    setDropdownOpen(false)
-  }
+    dispatch(logout());
+    setDropdownOpen(false);
+  };
 
   return (
     <header className="navbar">
@@ -48,10 +50,13 @@ function Navbar({ onMenuClick }) {
         </button>
         <Link to="/" className="navbar-logo">
           <svg viewBox="0 0 159 36" className="logo-icon">
-            <path fill="#FF0000" d="M154 6.2c-1.8-6.8-7.2-12.2-14-14C130.4-9.8 79.5-9.8 79.5-9.8s-50.9 0-60.5 1.6c-6.8 1.8-12.2 7.2-14 14C3.5 15.8 3.5 25 3.5 25s0 9.2 1.6 14.8c1.8 6.8 7.2 12.2 14 14 9.6 1.6 60.5 1.6 60.5 1.6s50.9 0 60.5-1.6c6.8-1.8 12.2-7.2 14-14 1.6-5.6 1.6-14.8 1.6-14.8s0-9.2-1.6-14.8z"/>
-            <path fill="#FFF" d="M64.5 16.5v17l51-8.5v-17l-51 8.5z"/>
+            <path
+              fill="#FF0000"
+              d="M154 6.2c-1.8-6.8-7.2-12.2-14-14C130.4-9.8 79.5-9.8 79.5-9.8s-50.9 0-60.5 1.6c-6.8 1.8-12.2 7.2-14 14C3.5 15.8 3.5 25 3.5 25s0 9.2 1.6 14.8c1.8 6.8 7.2 12.2 14 14 9.6 1.6 60.5 1.6 60.5 1.6s50.9 0 60.5-1.6c6.8-1.8 12.2-7.2 14-14 1.6-5.6 1.6-14.8 1.6-14.8s0-9.2-1.6-14.8z"
+            />
+            <path fill="#FFF" d="M64.5 16.5v17l51-8.5v-17l-51 8.5z" />
           </svg>
-          <span className="logo-text">YouTube</span>
+          <span className="logo-text">VistasPlus</span>
         </Link>
       </div>
 
@@ -80,18 +85,43 @@ function Navbar({ onMenuClick }) {
       <div className="navbar-right">
         {!user ? (
           <Link to="/login" className="navbar-sign-in-btn" aria-label="Sign in">
-            <svg viewBox="0 0 24 24" fill="currentColor" className="navbar-sign-in-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="navbar-sign-in-icon"
+            >
               <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
             </svg>
             <span>Sign in</span>
           </Link>
         ) : (
           <>
-            <button className="navbar-icon-btn" aria-label="Create">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2zm3-7H3v12h18V6zm-2 10H5V8h10v8z" />
+            <button
+              type="button"
+              className="navbar-upload-trigger"
+              aria-label="Upload video"
+              aria-haspopup="dialog"
+              aria-expanded={uploadModalOpen}
+              onClick={() => setUploadModalOpen(true)}
+            >
+              <svg
+                className="navbar-upload-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.25"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="M12 5v14M12 5l-5.5 5.5M12 5l5.5 5.5" />
               </svg>
+              <span className="navbar-upload-text">Upload</span>
             </button>
+            <UploadVideoModal
+              isOpen={uploadModalOpen}
+              onClose={() => setUploadModalOpen(false)}
+            />
             <button className="navbar-icon-btn" aria-label="Notifications">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
@@ -107,8 +137,11 @@ function Navbar({ onMenuClick }) {
                 onClick={() => setDropdownOpen((o) => !o)}
               >
                 <img
-                  src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`}
-                  alt={user.fullName || 'Profile'}
+                  src={
+                    user.avatar ||
+                    `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`
+                  }
+                  alt={user.fullName || "Profile"}
                 />
               </button>
               {dropdownOpen && (
@@ -140,7 +173,7 @@ function Navbar({ onMenuClick }) {
         )}
       </div>
     </header>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

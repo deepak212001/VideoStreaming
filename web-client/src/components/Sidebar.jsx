@@ -4,9 +4,7 @@ import './Sidebar.css'
 
 const SIDEBAR_ITEMS = [
   { id: 'home', icon: 'home', label: 'Home', path: '/' },
-  { id: 'explore', icon: 'explore', label: 'Explore', path: '#' },
-  { id: 'subscriptions', icon: 'subscriptions', label: 'Subscriptions', path: '#' },
-  { id: 'library', icon: 'library', label: 'Library', path: '#' },
+  { id: 'subscriptions', icon: 'subscriptions', label: 'Subscriptions', path: '/subscriptions' },
   { id: 'history', icon: 'history', label: 'History', path: '/history' },
   { id: 'playlist', icon: 'playlist', label: 'Playlists', path: '#' },
   { id: 'watchlater', icon: 'watch-later', label: 'Watch Later', path: '#' },
@@ -15,7 +13,15 @@ const SIDEBAR_ITEMS = [
 function Sidebar({ collapsed, isOpen, onClose, activeItem: activeItemProp }) {
   const location = useLocation()
   const user = useSelector((state) => state.auth.user)
-  const activeItem = activeItemProp ?? (location.pathname === '/' ? 'home' : location.pathname === '/history' ? 'history' : '')
+  const activeItem =
+    activeItemProp ??
+    (location.pathname === '/'
+      ? 'home'
+      : location.pathname === '/history'
+        ? 'history'
+        : location.pathname === '/subscriptions'
+          ? 'subscriptions'
+          : '')
 
   const Icon = ({ name }) => {
     const icons = {

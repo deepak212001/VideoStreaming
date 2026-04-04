@@ -1,0 +1,346 @@
+/* Beats App.css `.main-content { padding: 0 }` (same specificity would lose in cascade) */
+main.main-content.channel-page {
+  padding: 32px 48px 56px;
+  box-sizing: border-box;
+}
+
+.channel-page {
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  min-width: 0;
+}
+
+.channel-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 0 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.channel-header-avatar {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #272727;
+  flex-shrink: 0;
+}
+
+.channel-header-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.channel-header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+/* Explicit light text — beats any global h1 theme rules */
+.channel-page h1.channel-header-name {
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.channel-header-verified {
+  width: 20px;
+  height: 20px;
+  color: #aaa;
+  flex-shrink: 0;
+}
+
+.channel-header-meta {
+  font-size: 14px;
+  color: #aaa;
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.channel-header-desc {
+  font-size: 14px;
+  color: #aaa;
+  margin: 0 0 16px;
+  max-width: 640px;
+}
+
+.channel-header-desc-more {
+  color: #f1f1f1;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font: inherit;
+  padding: 0;
+  margin-left: 4px;
+}
+
+.channel-header-desc-more:hover {
+  text-decoration: underline;
+}
+
+.channel-subscribe-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.channel-subscribe-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.channel-subscribe-btn--outline {
+  background: transparent;
+  color: #f1f1f1;
+}
+
+.channel-subscribe-btn--outline:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.channel-subscribe-btn--subscribed {
+  background: #272727;
+  color: #fff;
+  border-color: transparent;
+}
+
+.channel-subscribe-btn--subscribed:hover {
+  background: #3f3f3f;
+}
+
+.channel-subscribe-btn-bell {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.channel-subscribe-chevron {
+  width: 18px;
+  height: 18px;
+  opacity: 0.9;
+  margin-left: -2px;
+}
+
+.channel-tabs-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 16px;
+}
+
+.channel-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.channel-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.channel-tab {
+  position: relative;
+  padding: 14px 20px;
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+
+.channel-tab:hover {
+  color: #f1f1f1;
+}
+
+.channel-tab--active {
+  color: #f1f1f1;
+}
+
+.channel-tab--active::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 3px;
+  background: #f1f1f1;
+  border-radius: 2px 2px 0 0;
+}
+
+.channel-tab-search {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #f1f1f1;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.channel-tab-search:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.channel-tab-search svg {
+  width: 24px;
+  height: 24px;
+}
+
+.channel-filters {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.channel-filters::-webkit-scrollbar {
+  height: 6px;
+}
+
+.channel-filters::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.channel-filter-chip {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  color: #f1f1f1;
+  transition: background 0.15s;
+}
+
+.channel-filter-chip:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.channel-filter-chip--active {
+  background: #f1f1f1;
+  color: #0f0f0f;
+}
+
+.channel-filter-chip--active:hover {
+  background: #e4e4e4;
+}
+
+.channel-video-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.channel-video-grid > li {
+  min-width: 0;
+}
+
+.channel-placeholder-tab {
+  padding: 48px 16px;
+  text-align: center;
+  color: #717171;
+  font-size: 15px;
+}
+
+.channel-page-error {
+  padding: 48px 16px;
+  text-align: center;
+  color: #f28b82;
+}
+
+@media (max-width: 1200px) {
+  .channel-video-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  main.main-content.channel-page {
+    padding: 24px 32px 44px;
+  }
+
+  .channel-header-avatar {
+    width: 96px;
+    height: 96px;
+  }
+
+  .channel-video-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  main.main-content.channel-page {
+    padding: 16px 20px 36px;
+  }
+
+  .channel-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .channel-header-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .channel-header-title-row {
+    justify-content: center;
+  }
+
+  .channel-header-meta,
+  .channel-header-desc {
+    text-align: center;
+  }
+
+  .channel-subscribe-wrap {
+    justify-content: center;
+  }
+
+  .channel-video-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

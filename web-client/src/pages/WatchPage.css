@@ -2,6 +2,22 @@
   padding: 0 !important;
 }
 
+.watch-empty {
+  padding: 48px 24px;
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: center;
+  color: #aaa;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.watch-empty-hint {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #717171;
+}
+
 .watch-layout {
   display: flex;
   gap: 24px;

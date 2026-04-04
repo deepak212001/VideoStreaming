@@ -1,6 +1,9 @@
+import mongoose, {isValidObjectId} from "mongoose";
 import {asyncHandler} from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js";
 import {User} from "../models/user.models.js";
+import {Video} from "../models/video.models.js";
+import {Subscription} from "../models/subscription.models.js";
 import {uploadOnCloudinary, deleteOnCloudinary} from "../utils/cloudinary.js";
 import {ApiResponse} from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
@@ -109,7 +112,7 @@ const registerUser = asyncHandler(async (req, res) => {
   // const avatarLocalPath = req.files?.avatar[0]?.path means avatar[0] meanth array ka first object and hai to uska path
   let avatarLocalPath;
   console.log("req.files", req.files);
-  
+
   if (
     req.files &&
     Array.isArray(req.files.avatar) &&
@@ -206,8 +209,8 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   };
   //cookies send karna  hai to ye kuchh options(object) karne hote hai
   // by default koi bhi modiication kar sakta hai
@@ -262,8 +265,8 @@ const logoutUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   };
 
   return res
@@ -302,14 +305,13 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       throw new ApiError(401, "Refresh token is expired or used");
     }
 
-    const {accessToken, newRefreshToken} = await generateAccessAndRefereshToken(
-      user._id
-    );
+    const {accessToken, refreshToken: newRefreshToken} =
+      await generateAccessAndRefereshToken(user._id);
 
     const options = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     };
 
     return res
@@ -610,6 +612,49 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     );
 });
 
+const getChannelById = asyncHandler(async (req, res) => {
+  const {channelId} = req.params;
+  if (!channelId || !isValidObjectId(channelId)) {
+    throw new ApiError(400, "Invalid channel id");
+  }
+
+  const user = await User.findById(channelId).select(
+    "fullName username avatar createdAt",
+  );
+  if (!user) {
+    throw new ApiError(404, "Channel not found");
+  }
+
+  const [subscribersCount, videoCount] = await Promise.all([
+    Subscription.countDocuments({channel: channelId}),
+    Video.countDocuments({owner: channelId, isPublished: true}),
+  ]);
+
+  let isSubscribed = false;
+  if (req.user?._id) {
+    const sub = await Subscription.exists({
+      subscriber: req.user._id,
+      channel: channelId,
+    });
+    isSubscribed = !!sub;
+  }
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        channel: {
+          ...user.toObject(),
+          subscribersCount,
+          videoCount,
+          isSubscribed,
+        },
+      },
+      "Channel profile fetched",
+    ),
+  );
+});
+
 const getWatchHistory = asyncHandler(async (req, res) => {
   // get user id from frontend
   // check if user exists in the database
@@ -660,16 +705,13 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     },
   ]);
 
+  const history = user?.[0]?.watchHistory ?? [];
+
   return res
     .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        user[0].watchHistory,
-        "Watch history fetched successfully"
-      )
-    );
+    .json(new ApiResponse(200, history, "Watch history fetched successfully"));
 });
+
 
 // 200 is a https status code which means ok
 // 400 is a https status code which means bad request
@@ -686,5 +728,6 @@ export {
   updateUserAvatar,
   updateUserCoverImage,
   getUserChannelProfile,
+  getChannelById,
   getWatchHistory,
 };

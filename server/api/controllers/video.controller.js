@@ -57,23 +57,32 @@ const getAllVideos = asyncHandler(async (req, res) => {
   // }
 
   const {page = 1, limit = 30} = req.query;
-  const videos = await Video.find({isPublished: true})
-    .sort({createdAt: -1}) // Latest first
-    .skip((page - 1) * limit)
-    .limit(Number(limit))
-    .populate("owner", "fullName avatar"); // Channel info
-  if (!videos || videos.length === 0) {
+  const pageNum = Math.max(1, Number(page) || 1);
+  const limitNum = Math.min(50, Math.max(1, Number(limit) || 30));
+  const filter = {isPublished: true};
+
+  const [videos, totalVideos] = await Promise.all([
+    Video.find(filter)
+      .sort({createdAt: -1})
+      .skip((pageNum - 1) * limitNum)
+      .limit(limitNum)
+      .populate("owner", "fullName avatar")
+      .lean(),
+    Video.countDocuments(filter),
+  ]);
+
+  if (!videos?.length) {
     return res.status(404).json({
       success: false,
       message: "No videos found",
     });
   }
-  const totalVideos = await Video.countDocuments({isPublished: true});
+
   res.status(200).json({
     success: true,
     totalVideos,
-    currentPage: Number(page),
-    totalPages: Math.ceil(totalVideos / limit),
+    currentPage: pageNum,
+    totalPages: Math.ceil(totalVideos / limitNum) || 1,
     videos,
   });
 });
@@ -210,22 +219,39 @@ const getVideoById = asyncHandler(async (req, res) => {
     "owner",
     "avatar fullName"
   );
-  video.view = video.view + 1;
-  const comments = await Comment.find({video: videoId}).populate(
-    "owner",
-    "avatar fullName"
-  );
-  const likes = await Like.countDocuments({video: videoId});
-  await video.save();
-  console.log(video);
   if (!video) {
-    throw new ApiError(500, "Video not found");
+    throw new ApiError(404, "Video not found");
   }
+  video.view = video.view + 1;
+  const comments = await Comment.find({video: videoId})
+    .populate("owner", "avatar fullName username")
+    .lean();
+  const uid = req.user?._id;
+  for (const com of comments) {
+    com.likes = await Like.countDocuments({comment: com._id});
+    com.isLiked = uid
+      ? !!(await Like.findOne({comment: com._id, likeBy: uid}).select("_id").lean())
+      : false;
+  }
+  const likes = await Like.countDocuments({video: videoId});
+  let isLiked = false;
+  if (req.user) {
+    isLiked = await Like.findOne({
+      video: videoId,
+      likeBy: req.user._id,
+    });
+    isLiked = isLiked ? true : false;
+  }
+  await video.save();
 
   return res
     .status(201)
     .json(
-      new ApiResponse(201, {video, comments, likes}, "video found successfully")
+      new ApiResponse(
+        201,
+        {video, comments, likes, isLiked},
+        "video found successfully"
+      )
     );
 });
 
@@ -328,6 +354,47 @@ const deleteVideo = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, removeVideo, "Your video remove successfully "));
 });
 
+const getVideosByChannel = asyncHandler(async (req, res) => {
+  const {channelId} = req.params;
+  const {sort = "latest", page = 1, limit = 24} = req.query;
+
+  if (!channelId || !isValidObjectId(channelId)) {
+    throw new ApiError(400, "Invalid channel id");
+  }
+
+  const ownerExists = await User.findById(channelId).select("_id").lean();
+  if (!ownerExists) {
+    throw new ApiError(404, "Channel not found");
+  }
+
+  let sortOpt = {createdAt: -1};
+  if (sort === "oldest") sortOpt = {createdAt: 1};
+  if (sort === "popular") sortOpt = {view: -1};
+
+  const pageNum = Math.max(1, Number(page) || 1);
+  const limitNum = Math.min(50, Math.max(1, Number(limit) || 24));
+
+  const filter = {owner: channelId, isPublished: true};
+
+  const [videos, total] = await Promise.all([
+    Video.find(filter)
+      .sort(sortOpt)
+      .skip((pageNum - 1) * limitNum)
+      .limit(limitNum)
+      .populate("owner", "fullName avatar username")
+      .lean(),
+    Video.countDocuments(filter),
+  ]);
+
+  return res.status(200).json({
+    success: true,
+    videos,
+    totalVideos: total,
+    currentPage: pageNum,
+    totalPages: Math.ceil(total / limitNum) || 1,
+  });
+});
+
 const togglePublishStatus = asyncHandler(async (req, res) => {
   const {videoId} = req.params;
 
@@ -363,6 +430,7 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 
 export {
   getAllVideos,
+  getVideosByChannel,
   publishAVideo,
   getVideoById,
   updateVideo,

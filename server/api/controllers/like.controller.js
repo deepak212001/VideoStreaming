@@ -2,6 +2,7 @@ import mongoose, { isValidObjectId } from "mongoose"
 import { User } from "../models/user.models.js"
 import { Video } from "../models/video.models.js"
 import { Like } from "../models/like.models.js"
+import { Comment } from "../models/comment.models.js"
 import { Tweet } from "../models/tweet.models.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
@@ -14,26 +15,22 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid Video ID")
     }
 
-    const isLiked = await Like.findOne(
-        {
-            likedBy: req.user?._id,
-            video: videoId
-        }
-    )
+    const isLiked = await Like.findOne({
+        likeBy: req.user?._id,
+        video: videoId,
+    })
 
     if (isLiked) {
-        await Like.findByIdAndDelete(isLiked?._id)
+        await Like.findByIdAndDelete(isLiked._id)
         return res
             .status(200)
-            .json(new ApiResponse(200, { Liked: false }, "Video like removed successfully"))
+            .json(new ApiResponse(200, { liked: false }, "Video like removed successfully"))
     }
 
-    const likeVideo = await Like.create(
-        {
-            likedBy: req.user?._id,
-            video: videoId
-        }
-    )
+    const likeVideo = await Like.create({
+        likeBy: req.user?._id,
+        video: videoId,
+    })
 
     if (!likeVideo) {
         throw new ApiError(400, "Like document creation failed")
@@ -41,46 +38,38 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
 
     return res
         .status(200)
-        .json(new ApiResponse(200, { Liked: true }, "Video Like successfully"))
+        .json(new ApiResponse(200, { liked: true }, "Video Like successfully"))
 })
 
 const toggleCommentLike = asyncHandler(async (req, res) => {
     const { commentId } = req.params
-    //TODO: toggle like on comment
-    const userId = req.user?._id;
-    console.log(req.params)
-    // console.log(tweetId)
-    console.log(userId)
-    // Validate tweet ID
+    const userId = req.user?._id
+
     if (!isValidObjectId(commentId)) {
-        throw new ApiError(400, "Invalid comment ID");
+        throw new ApiError(400, "Invalid comment ID")
     }
 
-    const comment = await Tweet.findById(commentId);
-    if (!comment) {
-        throw new ApiError(404, "comment not found");
+    const commentDoc = await Comment.findById(commentId)
+    if (!commentDoc) {
+        throw new ApiError(404, "Comment not found")
     }
 
-    const isLiked = await Like.findOne(
-        {
-            likedBy: userId,
-            comment: commentId
-        }
-    )
+    const existing = await Like.findOne({
+        likeBy: userId,
+        comment: commentId,
+    })
 
-    if (isLiked) {
-        await Like.findByIdAndUpdate(isLiked?._id)
+    if (existing) {
+        await Like.findByIdAndDelete(existing._id)
         return res
             .status(200)
-            .json(new ApiResponse(200, { Liked: false }, "comment Like removed successfully"))
+            .json(new ApiResponse(200, { liked: false }, "Comment like removed"))
     }
 
-    const likeDocument = await Like.create(
-        {
-            likedBy: userId,
-            comment: commentId
-        }
-    )
+    const likeDocument = await Like.create({
+        likeBy: userId,
+        comment: commentId,
+    })
 
     if (!likeDocument) {
         throw new ApiError(400, "Like document creation failed")
@@ -88,8 +77,7 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
 
     return res
         .status(200)
-        .json(new ApiResponse(200, { Liked: true }, "comment liked successfully"))
-
+        .json(new ApiResponse(200, { liked: true }, "Comment liked successfully"))
 })
 
 const toggleTweetLike = asyncHandler(async (req, res) => {

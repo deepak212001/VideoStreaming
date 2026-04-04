@@ -1,0 +1,226 @@
+.subscriptions-main {
+  padding: 24px 32px 32px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.subscriptions-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #f1f1f1;
+  margin: 0 0 8px;
+}
+
+.subscriptions-sub {
+  font-size: 14px;
+  color: #aaa;
+  margin: 0 0 24px;
+}
+
+.subscriptions-grid {
+  --sub-avatar: 96px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 232px);
+  justify-content: center;
+  justify-items: stretch;
+  column-gap: 28px;
+  row-gap: calc(var(--sub-avatar) / 2 + 28px);
+  list-style: none;
+  padding: calc(var(--sub-avatar) / 2 + 8px) 0 16px;
+  margin: 0 auto;
+  width: 100%;
+  overflow: visible;
+}
+
+.subscriptions-card {
+  --avatar: var(--sub-avatar, 96px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 232px;
+  max-width: 100%;
+  padding: calc(var(--avatar) / 2 + 10px) 22px 22px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.15s ease, border-color 0.15s ease;
+  overflow: visible;
+}
+
+.subscriptions-card:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.subscriptions-card-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+}
+
+.subscriptions-card-link:hover .subscriptions-card-name {
+  color: #3ea6ff;
+}
+
+/* Half above card, half inside — centered on top edge */
+.subscriptions-card-avatar {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--avatar);
+  height: var(--avatar);
+  border-radius: 50%;
+  object-fit: cover;
+  background: #272727;
+  flex-shrink: 0;
+  border: 3px solid #0f0f0f;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  z-index: 1;
+}
+
+.subscriptions-card-info {
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 14px;
+}
+
+.subscriptions-card-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #f1f1f1;
+  margin: 0 0 6px;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.subscriptions-card-username {
+  font-size: 13px;
+  color: #aaa;
+  margin: 0;
+  word-break: break-word;
+}
+
+.subscriptions-card-btn {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 24px;
+  background: #272727;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.subscriptions-card-btn:hover:not(:disabled) {
+  background: #3f3f3f;
+}
+
+.subscriptions-card-btn:disabled {
+  opacity: 0.85;
+  cursor: wait;
+}
+
+.subscriptions-card-btn-bell {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: #fff;
+}
+
+.subscriptions-card-btn-label {
+  line-height: 1;
+}
+
+.subscriptions-card-btn-loading {
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.subscriptions-empty,
+.subscriptions-login-hint {
+  padding: 48px 24px;
+  text-align: center;
+  color: #aaa;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.subscriptions-login-hint a {
+  color: #3ea6ff;
+  text-decoration: none;
+}
+
+.subscriptions-login-hint a:hover {
+  text-decoration: underline;
+}
+
+.subscriptions-error {
+  color: #f28b82;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.subscriptions-loading {
+  color: #aaa;
+  font-size: 14px;
+  padding: 24px;
+}
+
+@media (max-width: 900px) {
+  .subscriptions-grid {
+    --sub-avatar: 88px;
+    grid-template-columns: repeat(auto-fill, 208px);
+    column-gap: 22px;
+  }
+
+  .subscriptions-card {
+    width: 208px;
+    --avatar: 88px;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
+
+@media (max-width: 520px) {
+  .subscriptions-main {
+    padding: 16px 20px 24px 28px;
+  }
+
+  .subscriptions-title {
+    font-size: 20px;
+  }
+
+  .subscriptions-grid {
+    --sub-avatar: 84px;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    row-gap: calc(var(--sub-avatar) / 2 + 24px);
+  }
+
+  .subscriptions-card {
+    width: min(260px, 88vw);
+    --avatar: 84px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
