@@ -29,6 +29,14 @@
   background: #272727;
 }
 
+.video-card-storyboard {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
 .video-card-thumbnail img {
   width: 100%;
   height: 100%;
@@ -44,6 +52,7 @@
   position: absolute;
   bottom: 6px;
   right: 6px;
+  z-index: 2;
   background: rgba(0, 0, 0, 0.85);
   color: #fff;
   font-size: 12px;

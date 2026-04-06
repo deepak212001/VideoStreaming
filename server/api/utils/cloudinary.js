@@ -36,22 +36,81 @@ const uploadOnCloudinary = async (localFilePath) => {
 }
 
 
-const deleteOnCloudinary = async (publicId) => {
+const deleteOnCloudinary = async (publicId, resourceType = "image") => {
     try {
         if (!publicId) return null
-
-        //delete the file on cloudinary
-
-        const response = await cloudinary.uploader.destroy(publicId)
-        //file has been uploded successfull
-        // console.log("File is upload on cloudinary", response.url)
+        const response = await cloudinary.uploader.destroy(publicId, {
+            resource_type: resourceType,
+        })
         return response;
     } catch (error) {
         return null;
     }
 }
 
-export { uploadOnCloudinary, deleteOnCloudinary }
+/** Upload with optional folder/public_id; set unlinkAfter: false to keep local file */
+const uploadFileToCloudinary = async (localFilePath, options = {}) => {
+    const {
+        resource_type = "auto",
+        folder,
+        public_id,
+        unlinkAfter = true,
+    } = options;
+    try {
+        if (!localFilePath) return null;
+        const response = await cloudinary.uploader.upload(localFilePath, {
+            resource_type,
+            folder,
+            public_id,
+            use_filename: false,
+            unique_filename: false,
+            overwrite: true,
+        });
+        if (unlinkAfter && fs.existsSync(localFilePath)) fs.unlinkSync(localFilePath);
+        return response;
+    } catch (error) {
+        if (unlinkAfter && fs.existsSync(localFilePath)) {
+            try {
+                fs.unlinkSync(localFilePath);
+            } catch {
+                /* ignore */
+            }
+        }
+        console.error("Cloudinary upload error:", error);
+        return null;
+    }
+};
+
+/** Deletes all raw assets whose public_id starts with prefix (HLS .ts + .m3u8) */
+const deleteRawByPrefix = async (prefix) => {
+    try {
+        if (!prefix) return null;
+        return await cloudinary.api.delete_resources_by_prefix(prefix, {
+            resource_type: "raw",
+        });
+    } catch (error) {
+        console.error("deleteRawByPrefix:", error);
+        return null;
+    }
+};
+
+/** Path segment after /upload/…/ — strip extension for destroy() */
+function extractPublicIdFromCloudinaryUrl(url) {
+    if (!url || typeof url !== "string") return null;
+    const noQuery = url.split("?")[0];
+    const m = noQuery.match(/\/upload\/(?:v\d+\/)?(.+)$/);
+    if (!m) return null;
+    let pid = decodeURIComponent(m[1]);
+    return pid.replace(/\.[^/.]+$/, "");
+}
+
+export {
+    uploadOnCloudinary,
+    deleteOnCloudinary,
+    uploadFileToCloudinary,
+    deleteRawByPrefix,
+    extractPublicIdFromCloudinaryUrl,
+}
 
 
 

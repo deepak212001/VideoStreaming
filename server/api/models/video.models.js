@@ -13,6 +13,40 @@ const videoSchema = new Schema(
       required: true,
     },
 
+    thumbnailPublicId: {
+      type: String,
+      default: "",
+    },
+
+    /** Filmstrip image for hover scrub (optional) */
+    storyboardUrl: {
+      type: String,
+      default: "",
+    },
+
+    storyboardPublicId: {
+      type: String,
+      default: "",
+    },
+
+    /** Precomputed hover scrub: time (s) → sprite pixel offset; matches storyboard.jpg grid */
+    storyboardMeta: {
+      type: [
+        {
+          time: {type: Number, required: true},
+          x: {type: Number, required: true},
+          y: {type: Number, required: true},
+        },
+      ],
+      default: [],
+    },
+
+    /** Cloudinary folder prefix for bulk raw delete (HLS segments + playlists) */
+    hlsRawPrefix: {
+      type: String,
+      default: "",
+    },
+
     title: {
       type: String,
       required: true,

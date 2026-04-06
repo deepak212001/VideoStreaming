@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import Hls from 'hls.js'
 import './VideoPlayer.css'
 
 function VideoPlayer({ video }) {
@@ -24,10 +25,13 @@ function VideoPlayer({ video }) {
   const overlayLastShowAtRef = useRef(0)
   const seekAccumulateRef = useRef({ direction: null, value: 0, at: 0 })
   const qualityChangeTimeRef = useRef(null)
+  const hlsRef = useRef(null)
   const SEEK_RESET_MS = 1500
   const OVERLAY_HIDE_DELAY_MS = 2200
 
   const baseVideoUrl = typeof video?.videoFile === 'string' ? video.videoFile : video?.videoFile?.url
+
+  const isHls = Boolean(baseVideoUrl && /\.m3u8(\?|$)/i.test(baseVideoUrl))
 
   const getVideoUrlWithQuality = (url, qual) => {
     if (!url) return url
@@ -42,7 +46,43 @@ function VideoPlayer({ video }) {
     return url
   }
 
-  const videoUrl = getVideoUrlWithQuality(baseVideoUrl, quality)
+  const videoUrl = isHls ? baseVideoUrl : getVideoUrlWithQuality(baseVideoUrl, quality)
+
+  useEffect(() => {
+    const el = videoRef.current
+    if (!el || !baseVideoUrl) return
+
+    if (isHls && Hls.isSupported()) {
+      const hls = new Hls({ maxBufferLength: 60, backBufferLength: 30 })
+      hlsRef.current = hls
+      hls.loadSource(baseVideoUrl)
+      hls.attachMedia(el)
+      return () => {
+        hls.destroy()
+        hlsRef.current = null
+      }
+    }
+
+    hlsRef.current = null
+    el.src = isHls ? baseVideoUrl : videoUrl
+    return () => {
+      el.removeAttribute('src')
+    }
+  }, [baseVideoUrl, isHls, videoUrl])
+
+  useEffect(() => {
+    const hls = hlsRef.current
+    if (!isHls || !hls?.levels?.length) return
+    if (quality === 'auto') {
+      hls.currentLevel = -1
+      return
+    }
+    const order = ['360p', '480p', '720p', '1080p']
+    const idx = order.indexOf(quality)
+    if (idx >= 0 && idx < hls.levels.length) {
+      hls.currentLevel = idx
+    }
+  }, [quality, isHls])
 
   useEffect(() => {
     if (videoRef.current && volume >= 0 && volume <= 1) {
@@ -51,10 +91,10 @@ function VideoPlayer({ video }) {
   }, [volume])
 
   useEffect(() => {
-    if (videoRef.current && videoUrl) {
+    if (videoRef.current && (videoUrl || (isHls && baseVideoUrl))) {
       videoRef.current.volume = volume
     }
-  }, [videoUrl])
+  }, [videoUrl, isHls, baseVideoUrl])
 
   useEffect(() => {
     if (videoRef.current) {
@@ -131,7 +171,9 @@ function VideoPlayer({ video }) {
 
   useEffect(() => {
     const video = videoRef.current
-    if (!video || !videoUrl || qualityChangeTimeRef.current == null) return
+    if (!video || qualityChangeTimeRef.current == null) return
+    if (!isHls && !videoUrl) return
+    if (isHls && !baseVideoUrl) return
 
     const seekTo = qualityChangeTimeRef.current
     const doSeek = () => {
@@ -140,13 +182,18 @@ function VideoPlayer({ video }) {
       setCurrentTime(seekTo)
     }
 
+    if (isHls) {
+      doSeek()
+      return
+    }
+
     if (video.readyState >= 2) {
       doSeek()
       return
     }
     video.addEventListener('loadeddata', doSeek, { once: true })
     return () => video.removeEventListener('loadeddata', doSeek)
-  }, [videoUrl])
+  }, [videoUrl, quality, isHls, baseVideoUrl])
 
   useEffect(() => {
     return () => {
@@ -307,7 +354,6 @@ function VideoPlayer({ video }) {
         {videoUrl ? (
           <video
             ref={videoRef}
-            src={videoUrl}
             poster={video?.thumbnail}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
